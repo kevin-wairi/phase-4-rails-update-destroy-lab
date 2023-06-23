@@ -18,9 +18,26 @@ class PlantsController < ApplicationController
     render json: plant, status: :created
   end
 
+  def update
+    plant = Plant.find_by(id: params[:id])
+    plant.update(is_in_stock: false)
+    render json: plant
+  rescue ActiveRecord::RecordNotFound
+    record_not_found_response
+  end
+  def destroy
+    plant = Plant.find_by(id: params[:id])
+    plant.destroy
+    rescue ActiveRecord::RecordNotFound
+      record_not_found_response
+  end
+
   private
 
   def plant_params
     params.permit(:name, :image, :price, :is_in_stock)
+  end
+  def record_not_found_response
+    render json: { error: "Plant not found" }, status: :not_found
   end
 end
